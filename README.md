@@ -56,7 +56,7 @@ It's also a deliberate learning project — a vehicle for going deep on FastAPI,
 
 ## Project Status
 
-🚧 **Pre-code / planning stage.** Requirements and the full sprint-by-sprint build plan are written; implementation hasn't started yet. Track progress via the docs below.
+🚧 **Sprint 0 (Groundwork) — code complete, pending local infra.** The FastAPI skeleton, config, `/health` check, tests, and ADR are written and passing (`pytest`, `ruff check .`). Still needed on the dev machine: Docker Desktop (for Postgres + Redis) and `uv`, then `docker compose up -d` to get a fully live `{"status":"ok","db":"ok","redis":"ok"}`. Track progress via the docs below.
 
 ## Documentation
 

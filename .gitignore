@@ -1,4 +1,25 @@
-*.md
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
 
-pyproject.toml
+# Node (frontend, added in Sprint 4)
+node_modules/
+dist/
+
+# Env / secrets
 .env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
