@@ -1,0 +1,172 @@
+# The quest catalog — the only place XP/coin values are allowed to live.
+# `scripts/seed.py` upserts this into the `quests` table by `id`; the server
+# always re-reads values from the DB (never trusts a client-sent XP amount).
+#
+# ⚠️ Starter set, not final. These are placeholder quests/values sized by
+# category (main > side > health > leisure), not ported from a prototype —
+# there wasn't one in this repo yet. Tune ids, titles, and numbers freely;
+# nothing downstream hardcodes them.
+#
+# stat_key feeds achievements.yaml (Sprint 2) — it's the counter an
+# achievement threshold checks against, e.g. "unlock 'PR Veteran' at
+# prs_merged >= 10". Leave it null for quests that shouldn't feed a counter.
+
+quests:
+  # --- Main: the big, effortful stuff ---
+  - id: ml_study
+    category: main
+    title: "Study ML (deep work session)"
+    xp: 150
+    coins: 15
+    stat_key: ml_sessions
+
+  - id: dsa_practice
+    category: main
+    title: "DSA practice session"
+    xp: 100
+    coins: 10
+    stat_key: dsa_solved
+
+  - id: open_source_pr
+    category: main
+    title: "Ship an open-source PR"
+    xp: 200
+    coins: 25
+    stat_key: prs_merged
+
+  - id: security_research
+    category: main
+    title: "Security research / CTF practice"
+    xp: 150
+    coins: 15
+    stat_key: security_sessions
+
+  - id: deep_work_block
+    category: main
+    title: "2h focused deep work block"
+    xp: 120
+    coins: 10
+    stat_key: deep_work_blocks
+
+  # --- Side: smaller, still-counts tasks ---
+  - id: read_paper
+    category: side
+    title: "Read a research paper"
+    xp: 60
+    coins: 5
+    stat_key: papers_read
+
+  - id: code_review
+    category: side
+    title: "Review a PR / give feedback"
+    xp: 40
+    coins: 5
+    stat_key: null
+
+  - id: write_note
+    category: side
+    title: "Write a note / blog / journal entry"
+    xp: 50
+    coins: 5
+    stat_key: null
+
+  - id: side_project
+    category: side
+    title: "Work on a side project (30min+)"
+    xp: 70
+    coins: 5
+    stat_key: null
+
+  # --- Health ---
+  - id: workout
+    category: health
+    title: "Gym / workout session"
+    xp: 80
+    coins: 10
+    stat_key: workouts
+
+  - id: run
+    category: health
+    title: "Go for a run"
+    xp: 70
+    coins: 10
+    stat_key: runs
+
+  - id: sleep_8h
+    category: health
+    title: "Slept 8+ hours"
+    xp: 40
+    coins: 5
+    stat_key: null
+
+  - id: meal_prep
+    category: health
+    title: "Cook a healthy meal"
+    xp: 30
+    coins: 5
+    stat_key: null
+
+  - id: meditate
+    category: health
+    title: "Meditate 10+ minutes"
+    xp: 30
+    coins: 5
+    stat_key: null
+
+  # --- Leisure: still worth logging, capped low on purpose ---
+  - id: read_book
+    category: leisure
+    title: "Read for fun (30min+)"
+    xp: 30
+    coins: 5
+    stat_key: null
+
+  - id: game_session
+    category: leisure
+    title: "Gaming / hobby time"
+    xp: 20
+    coins: 5
+    stat_key: null
+
+  - id: social_hangout
+    category: leisure
+    title: "Hang out with friends offline"
+    xp: 40
+    coins: 5
+    stat_key: null
+
+  - id: creative_hobby
+    category: leisure
+    title: "Creative hobby (music, art, etc.)"
+    xp: 30
+    coins: 5
+    stat_key: null
+
+  # --- Penalties: negative deltas, must never touch the streak (Sprint 2) ---
+  - id: skipped_workout
+    category: penalty
+    title: "Skipped a planned workout"
+    xp: -30
+    coins: -5
+    stat_key: null
+
+  - id: doomscroll
+    category: penalty
+    title: "Doomscrolled 1h+"
+    xp: -40
+    coins: -5
+    stat_key: null
+
+  - id: missed_deadline
+    category: penalty
+    title: "Missed a self-set deadline"
+    xp: -50
+    coins: -10
+    stat_key: null
+
+  - id: junk_food_binge
+    category: penalty
+    title: "Binged junk food"
+    xp: -20
+    coins: -5
+    stat_key: null

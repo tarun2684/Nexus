@@ -1,0 +1,35 @@
+# Combo definitions — read by `engine/combos.py` (Sprint 2), not seeded to a
+# table. A combo auto-fires **once per day** when every quest in `quest_ids`
+# has been completed that day; it writes its own bonus `event` (type="combo").
+# ⚠️ Starter set — same caveat as quests.yaml: tune freely, nothing hardcodes these.
+
+combos:
+  - id: morning_warrior
+    title: "Morning Warrior"
+    description: "Workout + ML study, same day."
+    quest_ids: [workout, ml_study]
+    xp_bonus: 50
+    coins_bonus: 10
+
+  - id: deep_work_ultra
+    title: "Deep Work Ultra"
+    description: "ML study + DSA practice + an open-source PR, same day."
+    quest_ids: [ml_study, dsa_practice, open_source_pr]
+    xp_bonus: 100
+    coins_bonus: 20
+
+  - id: health_nut
+    title: "Health Nut"
+    description: "Workout + run + a healthy meal, same day."
+    quest_ids: [workout, run, meal_prep]
+    xp_bonus: 60
+    coins_bonus: 10
+
+  - id: perfect_day
+    title: "Perfect Day"
+    description: "At least one Main, Side, Health, and Leisure quest, same day."
+    # Category-based, not a fixed quest list — engine/combos.py checks
+    # "one done-today quest per category" for this one instead of quest_ids.
+    categories: [main, side, health, leisure]
+    xp_bonus: 150
+    coins_bonus: 25

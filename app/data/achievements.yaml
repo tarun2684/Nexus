@@ -1,0 +1,47 @@
+# Achievement definitions — read by `engine/achievements.py` (Sprint 2), not
+# seeded to a table. `stat_key` achievements auto-unlock when a user's
+# lifetime count for that stat (summed from `events.meta`/quest completions)
+# crosses `threshold`. `manual: true` achievements are admin-granted claims,
+# not auto-checked.
+# ⚠️ Starter set — same caveat as quests.yaml.
+
+achievements:
+  - id: pr_veteran
+    title: "PR Veteran"
+    description: "Merge 10 pull requests."
+    stat_key: prs_merged
+    threshold: 10
+    manual: false
+
+  - id: dsa_grinder
+    title: "DSA Grinder"
+    description: "Complete 50 DSA practice sessions."
+    stat_key: dsa_solved
+    threshold: 50
+    manual: false
+
+  - id: marathoner
+    title: "Marathoner"
+    description: "Log 20 runs."
+    stat_key: runs
+    threshold: 20
+    manual: false
+
+  - id: bookworm
+    title: "Bookworm"
+    description: "Read 10 research papers."
+    stat_key: papers_read
+    threshold: 10
+    manual: false
+
+  - id: century_streak
+    title: "Century"
+    description: "Reach a 100-day streak."
+    stat_key: streak_count # profile field, not a quest stat_key
+    threshold: 100
+    manual: false
+
+  - id: iron_will
+    title: "Iron Will"
+    description: "Manually claimed for something the stats can't capture."
+    manual: true

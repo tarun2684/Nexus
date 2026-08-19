@@ -3,8 +3,10 @@ from collections.abc import Awaitable, Callable
 from fastapi import FastAPI
 
 from app.db import ping_db, ping_redis
+from app.routers.quests import router as quests_router
 
 app = FastAPI(title="Nexus")
+app.include_router(quests_router)
 
 
 async def _check(check_fn: Callable[[], Awaitable[None]]) -> str:

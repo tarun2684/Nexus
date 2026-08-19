@@ -1,0 +1,26 @@
+# The coin shop — read by the shop service (Sprint 2+), not seeded to a
+# table. Purchases spend `profiles.coins` and apply `effect`; `limit`
+# constraints (e.g. once/week) are enforced server-side, never trust a client.
+# ⚠️ Starter set — same caveat as quests.yaml.
+
+items:
+  - id: code_shield
+    title: "Code Shield"
+    description: "Protects your streak through one missed day."
+    cost_coins: 100
+    effect: streak_shield
+    limit: "1/week"
+
+  - id: avatar_creeper
+    title: "Creeper Avatar"
+    description: "Unlock the Creeper skin for your profile."
+    cost_coins: 50
+    effect: unlock_avatar:creeper
+    limit: "once"
+
+  - id: trophy_frame_gold
+    title: "Gold Trophy Frame"
+    description: "A cosmetic frame around your profile trophy count."
+    cost_coins: 80
+    effect: unlock_cosmetic:trophy_frame_gold
+    limit: "once"

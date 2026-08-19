@@ -56,7 +56,7 @@ It's also a deliberate learning project — a vehicle for going deep on FastAPI,
 
 ## Project Status
 
-🚧 **Sprint 0 (Groundwork) — code complete, pending local infra.** The FastAPI skeleton, config, `/health` check, tests, and ADR are written and passing (`pytest`, `ruff check .`). Still needed on the dev machine: Docker Desktop (for Postgres + Redis) and `uv`, then `docker compose up -d` to get a fully live `{"status":"ok","db":"ok","redis":"ok"}`. Track progress via the docs below.
+🚧 **Sprint 1 (Data foundation) — code complete, pending local infra.** Models (`users`, `profiles`, `quests`, `events`, `daily_logs`), an Alembic migration, a seeded quest catalog, and `GET /quests` are all written and passing (`pytest`, `ruff check .`; migration + `alembic check` verified against a throwaway SQLite DB standing in for Postgres). Still needed on the dev machine: Docker Desktop (for Postgres + Redis) and `uv`, then `docker compose up -d` to run the real migration + seed against Postgres. Track progress via the docs below.
 
 ## Documentation
 
@@ -70,7 +70,19 @@ It's also a deliberate learning project — a vehicle for going deep on FastAPI,
 
 ## Getting Started
 
-Nexus isn't runnable yet. [nexus-sprint-0-tasks.md](nexus-sprint-0-tasks.md) covers the groundwork to stand up a working skeleton: repo scaffolding, a Docker Compose stack (Postgres + Redis), and a first `/health` endpoint. This section will be filled in with real setup instructions once that milestone lands.
+Nexus isn't runnable end-to-end on real infra yet (Docker Desktop + `uv` aren't installed on the dev machine). Once they are:
+
+```bash
+docker compose up -d              # Postgres + Redis
+uv sync                           # install deps
+uv run alembic upgrade head       # create the schema
+uv run python scripts/seed.py     # seed the quest catalog
+uv run uvicorn app.main:app --reload
+curl localhost:8000/health        # {"status":"ok","db":"ok","redis":"ok"}
+curl localhost:8000/quests        # full catalog, grouped by category
+```
+
+See [nexus-sprint-0-tasks.md](nexus-sprint-0-tasks.md) (groundwork) and [nexus-sprint-1-tasks.md](nexus-sprint-1-tasks.md) (data foundation) for how each piece got built.
 
 ## License
 
