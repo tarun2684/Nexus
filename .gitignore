@@ -1,25 +1,11 @@
-# Python
-.venv/
-__pycache__/
+```
+# Compiled Python files
 *.pyc
-*.pyo
-.pytest_cache/
-.ruff_cache/
-*.egg-info/
-build/
-dist/
+__pycache__/
 
-# Node (frontend, added in Sprint 4)
-node_modules/
-dist/
-
-# Env / secrets
+# Virtual environments
+venv/
+.venv/
 .env
-.env.*
-!.env.example
-
-# OS / editor
-.DS_Store
-Thumbs.db
-.vscode/
-.idea/
+*.env
+```
