@@ -1,5 +1,36 @@
 ```
-# Python
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+frontend/dist/
+
+# TypeScript
+*.tsbuildinfo
+.next/
+.nuxt/
+
+# Environment
+.env
+.env.local
+.env.*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python (if present)
 __pycache__/
 *.pyc
 *.pyo
@@ -8,32 +39,4 @@ __pycache__/
 env/
 venv/
 .venv/
-.ENV
-.ENV.local
-.env
-.env.local
-.env.*
-.pytest_cache/
-.mypy_cache/
-.coverage
-coverage/
-
-# Logs
-*.log
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*.tmp
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Build
-build/
-dist/
-*.egg-info/
 ```
