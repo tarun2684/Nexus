@@ -1,9 +1,13 @@
 """Time management and deadline tracking for Nexus."""
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from dataclasses import dataclass
 from typing import Optional
 from enum import Enum
+from zoneinfo import ZoneInfo
+
+
+IST = ZoneInfo("Asia/Kolkata")
 
 
 class DeadlineStatus(Enum):
@@ -40,7 +44,11 @@ class TimeManager:
     @property
     def now(self) -> datetime:
         """Get current time (real or overridden)."""
-        return self._current_time or datetime.utcnow()
+        return self._current_time or datetime.now(IST)
+    
+    def today_ist(self) -> date:
+        """Get today's date in IST timezone."""
+        return datetime.now(IST).date()
     
     def calculate_hours_remaining(self, deadline: datetime) -> float:
         """
