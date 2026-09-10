@@ -1,0 +1,17 @@
+# Virtual environment
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+.git
+.gitignore
+.env
+*.db
+*.sqlite3
+dist/
+build/
+*.egg-info/

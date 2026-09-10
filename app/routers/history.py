@@ -35,7 +35,7 @@ class HistoryOut(BaseModel):
 @router.get("/me/history", response_model=HistoryOut)
 async def get_user_history(
     days: int = Query(default=30, ge=1, le=90),
-    session: AsyncSession,
+    session: AsyncSession = Depends(get_session),  # noqa: B008 - FastAPI's DI pattern
 ) -> HistoryOut:
     """Get user's XP history for the last N days.
     
