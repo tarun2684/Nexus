@@ -26,6 +26,15 @@ wheels/
 .coverage
 htmlcov/
 .coverage.*
+.nosetests
+
+# Environment
+.env
+.env.local
+.env.*
+.venv/
+venv/
+ENV/
 
 # IDE
 .vscode/
@@ -34,11 +43,7 @@ htmlcov/
 *.swo
 *.tmp
 
-# Logs
-*.log
-
-# Environment
-.env
-.env.local
-*.env.*
+# OS
+.DS_Store
+Thumbs.db
 ```

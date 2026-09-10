@@ -2,11 +2,12 @@
 from datetime import date
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
+from app.db import get_session
 from app.engine.time import TimeManager
 from app.models import DailyLog, Profile, User
 
@@ -37,7 +38,7 @@ class StateOut(BaseModel):
 
 @router.get("/me/state", response_model=StateOut)
 async def get_user_state(
-    session: AsyncSession,
+    session: AsyncSession = Depends(get_session),  # noqa: B008 - FastAPI's DI pattern
 ) -> StateOut:
     """Get current user state — profile + today's progress.
     

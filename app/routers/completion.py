@@ -2,11 +2,12 @@
 from datetime import datetime
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
+from app.db import get_session
 from app.engine.time import TimeManager
 from app.models import DailyLog, Event, Profile, Quest
 from app.services.game import GameService
@@ -59,7 +60,7 @@ class ApplyPenaltyOut(BaseModel):
 async def complete_quest(
     quest_id: str,
     payload: CompleteQuestIn,
-    session: AsyncSession,
+    session: AsyncSession = Depends(get_session),  # noqa: B008 - FastAPI's DI pattern
 ) -> CompleteQuestOut:
     """Complete a quest and earn rewards.
     
@@ -212,7 +213,7 @@ async def complete_quest(
 async def apply_penalty(
     quest_id: str,
     payload: ApplyPenaltyIn,
-    session: AsyncSession,
+    session: AsyncSession = Depends(get_session),  # noqa: B008 - FastAPI's DI pattern
 ) -> ApplyPenaltyOut:
     """Apply a penalty for missing a quest deadline.
     
