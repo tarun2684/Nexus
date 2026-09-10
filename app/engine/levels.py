@@ -123,6 +123,11 @@ def get_current_level(total_xp: int) -> tuple[int, int, int]:
     if total_xp < 0:
         total_xp = 0
     
+    # Handle edge case: at 0 XP or below first level threshold, return level 1 with 0 progress
+    level_1_xp = calculate_xp_for_level(1)
+    if total_xp < level_1_xp:
+        return 1, 0, level_1_xp
+    
     level = 1
     while True:
         next_level_xp = calculate_xp_for_level(level + 1)
