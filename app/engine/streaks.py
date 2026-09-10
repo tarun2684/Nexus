@@ -1,8 +1,7 @@
 """Streak tracking and management for daily quests."""
 
-from datetime import datetime, timedelta
 from dataclasses import dataclass
-from typing import Optional, List
+from datetime import datetime, timedelta
 
 
 @dataclass
@@ -10,7 +9,7 @@ class StreakInfo:
     """Information about a user's streak."""
     current_streak: int
     longest_streak: int
-    last_completion_date: Optional[datetime]
+    last_completion_date: datetime | None
     next_required_date: datetime
     is_active: bool
     days_missed: int = 0
@@ -41,7 +40,7 @@ STREAK_REWARDS = [
 class StreakManager:
     """Manages daily streak tracking and rewards."""
     
-    def __init__(self, current_time: Optional[datetime] = None):
+    def __init__(self, current_time: datetime | None = None):
         """
         Initialize StreakManager.
         
@@ -62,8 +61,8 @@ class StreakManager:
     
     def calculate_streak(
         self,
-        completion_dates: List[datetime],
-        reference_date: Optional[datetime] = None
+        completion_dates: list[datetime],
+        reference_date: datetime | None = None
     ) -> StreakInfo:
         """
         Calculate current streak from a list of completion dates.
@@ -103,7 +102,6 @@ class StreakManager:
         # Calculate current streak
         current_streak = 0
         last_completion = None
-        expected_date = ref_date
         
         for i, date in enumerate(normalized_dates):
             if i == 0:
@@ -150,7 +148,7 @@ class StreakManager:
             days_missed=0
         )
     
-    def _find_longest_streak(self, sorted_dates: List[datetime]) -> int:
+    def _find_longest_streak(self, sorted_dates: list[datetime]) -> int:
         """Find the longest consecutive streak in a list of dates."""
         if not sorted_dates:
             return 0
@@ -167,7 +165,7 @@ class StreakManager:
         
         return longest
     
-    def get_streak_reward(self, streak_count: int) -> Optional[StreakReward]:
+    def get_streak_reward(self, streak_count: int) -> StreakReward | None:
         """
         Get reward for reaching a streak milestone.
         
@@ -187,7 +185,7 @@ class StreakManager:
         
         return applicable_reward
     
-    def get_next_milestone(self, streak_count: int) -> Optional[StreakReward]:
+    def get_next_milestone(self, streak_count: int) -> StreakReward | None:
         """
         Get the next streak milestone to aim for.
         
@@ -204,8 +202,8 @@ class StreakManager:
     
     def is_daily_quest_due(
         self,
-        last_completion: Optional[datetime],
-        reference_date: Optional[datetime] = None
+        last_completion: datetime | None,
+        reference_date: datetime | None = None
     ) -> bool:
         """
         Check if a daily quest is due based on last completion.

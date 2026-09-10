@@ -1,14 +1,14 @@
 """Core game service for quest completion and penalty handling."""
 
-from datetime import datetime
-from typing import Optional, Dict, Any, List
 from dataclasses import dataclass
+from datetime import datetime
+from typing import Any
 
-from ..engine.levels import get_current_level, can_level_up, calculate_xp_for_level
-from ..engine.time import TimeManager
-from ..engine.streaks import StreakManager
-from ..engine.combos import ComboManager
 from ..engine.achievements import AchievementManager
+from ..engine.combos import ComboManager
+from ..engine.levels import get_current_level
+from ..engine.streaks import StreakManager
+from ..engine.time import TimeManager
 
 
 @dataclass
@@ -23,7 +23,7 @@ class QuestCompletionResult:
     leveled_up: bool
     streak_count: int
     combo_multiplier: float
-    achievements_unlocked: List[str]
+    achievements_unlocked: list[str]
     message: str
 
 
@@ -57,11 +57,11 @@ class GameService:
         quest_xp: int,
         quest_coins: int,
         deadline: datetime,
-        completion_time: Optional[datetime],
-        current_user_state: Dict[str, Any],
-        recent_completions: List[datetime],
-        daily_completion_dates: List[datetime],
-        earned_achievements: List[str]
+        completion_time: datetime | None,
+        current_user_state: dict[str, Any],
+        recent_completions: list[datetime],
+        daily_completion_dates: list[datetime],
+        earned_achievements: list[str]
     ) -> QuestCompletionResult:
         """
         Process quest completion with full game mechanics.
@@ -111,8 +111,16 @@ class GameService:
         )
         
         # Apply penalty to base rewards if late
-        effective_xp = int(quest_xp / penalty_multiplier) if penalty_multiplier > 1.0 else quest_xp
-        effective_coins = int(quest_coins / penalty_multiplier) if penalty_multiplier > 1.0 else quest_coins
+        effective_xp = (
+            int(quest_xp / penalty_multiplier)
+            if penalty_multiplier > 1.0
+            else quest_xp
+        )
+        effective_coins = (
+            int(quest_coins / penalty_multiplier)
+            if penalty_multiplier > 1.0
+            else quest_coins
+        )
         
         # Calculate streak bonus
         streak_info = self.streak_manager.calculate_streak(daily_completion_dates)
@@ -179,7 +187,10 @@ class GameService:
             message_parts.append(f"🔥 Streak: {streak_info.current_streak} days!")
         
         if combo_info.is_active:
-            message_parts.append(f"⚡ Combo: {combo_info.current_count}x ({combo_info.multiplier}x multiplier)")
+            message_parts.append(
+                f"⚡ Combo: {combo_info.current_count}x "
+                f"({combo_info.multiplier}x multiplier)"
+            )
         
         if leveled_up:
             message_parts.append(f"🎉 LEVEL UP! You are now level {new_level}!")
@@ -209,8 +220,8 @@ class GameService:
         quest_xp: int,
         quest_coins: int,
         deadline: datetime,
-        current_time: Optional[datetime],
-        current_user_state: Dict[str, Any]
+        current_time: datetime | None,
+        current_user_state: dict[str, Any]
     ) -> PenaltyResult:
         """
         Apply penalty for missing a quest deadline.
@@ -269,11 +280,9 @@ class GameService:
         
         # Calculate new totals
         new_total_xp = current_xp - xp_loss
-        new_coins = current_coins - coins_loss
         
         # Determine if level was lost
         old_level = current_level
-        old_level_threshold = calculate_xp_for_level(old_level)
         new_level, _, _ = get_current_level(new_total_xp)
         level_lost = new_level < old_level
         
@@ -313,7 +322,7 @@ class GameService:
         streak_count: int = 0,
         combo_count: int = 0,
         is_on_time: bool = True
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Calculate potential quest rewards without completing it.
         
@@ -351,7 +360,11 @@ class GameService:
             "base_xp": base_xp,
             "base_coins": base_coins,
             "streak_bonus": xp - base_xp if streak_count > 0 else 0,
-            "combo_multiplier": self.combo_manager._get_rapid_multiplier(combo_count) if combo_count >= 2 else 1.0,
+            "combo_multiplier": (
+                self.combo_manager._get_rapid_multiplier(combo_count)
+                if combo_count >= 2
+                else 1.0
+            ),
             "on_time_bonus": is_on_time,
             "final_xp": xp,
             "final_coins": coins

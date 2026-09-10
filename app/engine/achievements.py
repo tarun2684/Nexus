@@ -1,9 +1,9 @@
 """Achievement system for tracking milestones and accomplishments."""
 
+from dataclasses import dataclass
 from datetime import datetime
-from dataclasses import dataclass, field
-from typing import Optional, List, Dict, Any
 from enum import Enum
+from typing import Any
 
 
 class AchievementType(Enum):
@@ -32,10 +32,10 @@ class Achievement:
     description: str
     achievement_type: AchievementType
     tier: AchievementTier
-    requirement: Dict[str, Any]  # e.g., {"level": 10} or {"quests_completed": 100}
+    requirement: dict[str, Any]  # e.g., {"level": 10} or {"quests_completed": 100}
     reward_xp: int
     reward_coins: int
-    badge_url: Optional[str] = None
+    badge_url: str | None = None
     is_secret: bool = False  # Hidden until earned
 
 
@@ -43,7 +43,7 @@ class Achievement:
 class UserAchievement:
     """User's progress toward an achievement."""
     achievement_id: str
-    earned_at: Optional[datetime]
+    earned_at: datetime | None
     current_progress: float
     required_progress: float
     percent_complete: float
@@ -229,18 +229,18 @@ class AchievementManager:
     
     def __init__(self):
         """Initialize AchievementManager with predefined achievements."""
-        self.achievements: Dict[str, Achievement] = {
+        self.achievements: dict[str, Achievement] = {
             ach.id: ach for ach in ACHIEVEMENTS
         }
     
-    def get_achievement(self, achievement_id: str) -> Optional[Achievement]:
+    def get_achievement(self, achievement_id: str) -> Achievement | None:
         """Get an achievement by ID."""
         return self.achievements.get(achievement_id)
     
     def check_achievement(
         self,
         achievement: Achievement,
-        user_stats: Dict[str, Any]
+        user_stats: dict[str, Any]
     ) -> UserAchievement:
         """
         Check user's progress toward an achievement.
@@ -276,9 +276,9 @@ class AchievementManager:
     
     def check_all_achievements(
         self,
-        user_stats: Dict[str, Any],
-        earned_achievements: List[str]
-    ) -> List[UserAchievement]:
+        user_stats: dict[str, Any],
+        earned_achievements: list[str]
+    ) -> list[UserAchievement]:
         """
         Check progress on all achievements.
         
@@ -304,9 +304,9 @@ class AchievementManager:
     
     def get_newly_earned_achievements(
         self,
-        user_stats: Dict[str, Any],
-        previously_earned: List[str]
-    ) -> List[Achievement]:
+        user_stats: dict[str, Any],
+        previously_earned: list[str]
+    ) -> list[Achievement]:
         """
         Find achievements that were just earned.
         
@@ -332,7 +332,7 @@ class AchievementManager:
     def get_achievements_by_type(
         self,
         achievement_type: AchievementType
-    ) -> List[Achievement]:
+    ) -> list[Achievement]:
         """Get all achievements of a specific type."""
         return [
             ach for ach in ACHIEVEMENTS
@@ -342,7 +342,7 @@ class AchievementManager:
     def get_achievements_by_tier(
         self,
         tier: AchievementTier
-    ) -> List[Achievement]:
+    ) -> list[Achievement]:
         """Get all achievements of a specific tier."""
         return [
             ach for ach in ACHIEVEMENTS
@@ -351,7 +351,7 @@ class AchievementManager:
     
     def calculate_total_rewards(
         self,
-        earned_achievement_ids: List[str]
+        earned_achievement_ids: list[str]
     ) -> tuple[int, int]:
         """
         Calculate total rewards from earned achievements.
@@ -375,7 +375,7 @@ class AchievementManager:
     
     def get_completion_percentage(
         self,
-        earned_achievement_ids: List[str]
+        earned_achievement_ids: list[str]
     ) -> float:
         """
         Calculate overall achievement completion percentage.

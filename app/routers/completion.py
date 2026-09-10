@@ -1,16 +1,14 @@
 """Quest completion and penalty endpoints."""
 from datetime import datetime
-from typing import List, Dict, Any
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from app.db import get_session
-from app.models import Quest, Profile, User, DailyLog, Event
 from app.engine.time import TimeManager
+from app.models import DailyLog, Event, Profile, Quest
 from app.services.game import GameService
 
 router = APIRouter(tags=["quests"])
@@ -36,7 +34,7 @@ class CompleteQuestOut(BaseModel):
     leveled_up: bool
     streak_count: int
     combo_multiplier: float
-    achievements_unlocked: List[str]
+    achievements_unlocked: list[str]
     message: str
 
 
@@ -61,7 +59,7 @@ class ApplyPenaltyOut(BaseModel):
 async def complete_quest(
     quest_id: str,
     payload: CompleteQuestIn,
-    session: AsyncSession = Depends(get_session),
+    session: AsyncSession,
 ) -> CompleteQuestOut:
     """Complete a quest and earn rewards.
     
@@ -110,9 +108,9 @@ async def complete_quest(
     
     # Get recent completions for combo calculation
     # TODO: Implement proper event history query
-    recent_completions: List[datetime] = []
-    daily_completion_dates: List[datetime] = []
-    earned_achievements: List[str] = []
+    recent_completions: list[datetime] = []
+    daily_completion_dates: list[datetime] = []
+    earned_achievements: list[str] = []
     
     # Build current user state
     current_state = {
@@ -214,7 +212,7 @@ async def complete_quest(
 async def apply_penalty(
     quest_id: str,
     payload: ApplyPenaltyIn,
-    session: AsyncSession = Depends(get_session),
+    session: AsyncSession,
 ) -> ApplyPenaltyOut:
     """Apply a penalty for missing a quest deadline.
     

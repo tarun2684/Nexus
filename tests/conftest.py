@@ -2,16 +2,15 @@ import asyncio
 from collections.abc import AsyncGenerator, Iterator
 
 import pytest
-from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 from sqlalchemy.pool import StaticPool
 from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 
+import app.models  # noqa: F401 - populates SQLModel.metadata before create_all
 from app.db import get_session
 from app.main import app as nexus_app
-import app.models  # noqa: F401 - populates SQLModel.metadata before create_all
 
 
 async def _create_tables(engine: AsyncEngine) -> None:
