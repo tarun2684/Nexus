@@ -10,17 +10,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
-# Copy project files needed for dependency resolution
+# Copy all project files first (needed for editable install)
 COPY pyproject.toml uv.lock ./
-
-# Install dependencies (creates .venv in /app)
-RUN uv sync --frozen --no-dev && rm -rf .venv/.gitignore
-
-# Copy application code
 COPY app ./app
 COPY alembic ./alembic
 COPY alembic.ini ./
 COPY scripts ./scripts
+COPY README.md ./
+
+# Install dependencies (creates .venv in /app)
+RUN uv sync --frozen --no-dev
 
 # Set environment variables
 ENV PYTHONPATH=/app
