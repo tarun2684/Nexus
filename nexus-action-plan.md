@@ -95,14 +95,14 @@
 **⛏ First move:** `app/engine/levels.py` with `level_for(xp)` + its test. Pure function, instant win.
 
 ### Pure logic — no DB, no HTTP (`app/engine/`)
-- [ ] `levels.py` — build the interpolated curve from your anchors (L1=0, L2=1000, L3=2500, L5=7000, L10=15k, L20=35k, L30=70k, L50=150k, L100=500k); `level_for(xp)`, `xp_for_level(n)`, `rank_for(level)`
-- [ ] `time.py` — **`IST = ZoneInfo("Asia/Kolkata")`**; `today_ist()`, `week_key_ist(dt)` (ISO week), `month_key_ist(dt)`. **Every date boundary in the app goes through here.**
-- [ ] `streaks.py` — `resolve_streak(last_active, today, shield_active)` → returns new count + whether shield was consumed
-- [ ] `combos.py` — `check_combos(done_today)` → list of newly-fired combo ids
-- [ ] `achievements.py` — `check_achievements(stats)` → newly unlocked ids
+- [✅] `levels.py` — build the interpolated curve from your anchors (L1=0, L2=1000, L3=2500, L5=7000, L10=15k, L20=35k, L30=70k, L50=150k, L100=500k); `level_for(xp)`, `xp_for_level(n)`, `rank_for(level)`
+- [✅] `time.py` — **`IST = ZoneInfo("Asia/Kolkata")`**; `today_ist()`, `week_key_ist(dt)` (ISO week), `month_key_ist(dt)`. **Every date boundary in the app goes through here.**
+- [✅] `streaks.py` — `resolve_streak(last_active, today, shield_active)` → returns new count + whether shield was consumed
+- [✅] `combos.py` — `check_combos(done_today)` → list of newly-fired combo ids
+- [✅] `achievements.py` — `check_achievements(stats)` → newly unlocked ids
 
 ### The one write path (`app/services/game.py`)
-- [ ] `complete_quest(user_id, quest_id)`:
+- [✅] `complete_quest(user_id, quest_id)`:
   1. Load quest **from DB** (never trust input for XP)
   2. Guard: already done today? → reject
   3. Write `event` (xp_delta, coin_delta from catalog)
@@ -111,21 +111,21 @@
   6. Fire combos → more events
   7. Check achievements → more events
   8. Return new state
-- [ ] Wrap the whole thing in **one DB transaction**
-- [ ] `apply_penalty(user_id, penalty_id)` — same path, negative delta, **must not touch the streak**
+- [✅] Wrap the whole thing in **one DB transaction**
+- [✅] `apply_penalty(user_id, penalty_id)` — same path, negative delta, **must not touch the streak**
 
 ### Tests (`tests/test_engine.py`) — do not skip
-- [ ] Level curve hits every anchor exactly; monotonic; L1 at 0 XP
-- [ ] Streak: consecutive days → increments
-- [ ] Streak: 1-day gap → resets to 1
-- [ ] Streak: 1-day gap **with shield** → survives, shield consumed
-- [ ] Streak: same day twice → no double increment
-- [ ] Milestones (3/7/14/30/60/100) fire exactly once
-- [ ] Combos fire once/day only
-- [ ] Penalty doesn't break a streak; XP floors at 0
-- [ ] **Day boundary at 23:59 IST vs 00:01 IST behaves correctly** (this is the bug that will bite you)
+- [✅] Level curve hits every anchor exactly; monotonic; L1 at 0 XP
+- [✅] Streak: consecutive days → increments
+- [✅] Streak: 1-day gap → resets to 1
+- [✅] Streak: 1-day gap **with shield** → survives, shield consumed
+- [✅] Streak: same day twice → no double increment
+- [✅] Milestones (3/7/14/30/60/100) fire exactly once
+- [✅] Combos fire once/day only
+- [✅] Penalty doesn't break a streak; XP floors at 0
+- [✅] **Day boundary at 23:59 IST vs 00:01 IST behaves correctly** (this is the bug that will bite you)
 
-**✅ Sprint exit test:** `pytest -v` — all green, engine tested with zero HTTP calls.
+**✅ Sprint exit test:** `pytest -v` — all green, engine tested with zero HTTP calls. **(28 tests passing)**
 
 > ⚠️ **Timezone discipline:** store UTC in the DB, convert to IST at the boundary. Never call `date.today()` anywhere in the app — only `today_ist()`.
 
