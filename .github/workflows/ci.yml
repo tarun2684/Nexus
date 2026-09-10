@@ -54,7 +54,7 @@ jobs:
       
       - name: Run tests
         env:
-          DATABASE_URL: postgresql://nexus:nexus@localhost:5432/nexus_test
+          DATABASE_URL: postgresql+asyncpg://nexus:nexus@localhost:5432/nexus_test
           REDIS_URL: redis://localhost:6379
         run: uv run pytest -v
       
