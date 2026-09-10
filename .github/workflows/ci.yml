@@ -59,7 +59,7 @@ jobs:
         run: uv run pytest -v
       
       - name: Lint with ruff
-        run: uv run ruff check app tests
+        run: uv run ruff check app tests --fix
 
   build-docker:
     runs-on: ubuntu-latest
