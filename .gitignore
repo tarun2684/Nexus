@@ -1,42 +1,5 @@
 ```
-# Dependencies
-node_modules/
-
-# Build outputs
-dist/
-build/
-frontend/dist/
-
-# TypeScript
-*.tsbuildinfo
-.next/
-.nuxt/
-
-# Environment
-.env
-.env.local
-.env.*
-
-# Editors
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Logs
-*.log
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Python (if present)
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
-.venv/
+# Database files
+*.db
+test.db
 ```
