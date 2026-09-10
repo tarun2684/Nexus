@@ -1,11 +1,9 @@
 """Time management and deadline tracking for Nexus."""
 
-from datetime import datetime, timedelta, date
 from dataclasses import dataclass
-from typing import Optional
+from datetime import date, datetime
 from enum import Enum
 from zoneinfo import ZoneInfo
-
 
 IST = ZoneInfo("Asia/Kolkata")
 
@@ -32,7 +30,7 @@ class TimeManager:
     
     WARNING_THRESHOLD_HOURS = 24  # Show warning when less than this remains
     
-    def __init__(self, current_time: Optional[datetime] = None):
+    def __init__(self, current_time: datetime | None = None):
         """
         Initialize TimeManager.
         
@@ -121,7 +119,9 @@ class TimeManager:
         hours_left = self.calculate_hours_remaining(deadline)
         return 0 < hours_left < self.WARNING_THRESHOLD_HOURS
     
-    def calculate_penalty_multiplier(self, deadline: datetime, completion_time: Optional[datetime] = None) -> float:
+    def calculate_penalty_multiplier(
+        self, deadline: datetime, completion_time: datetime | None = None
+    ) -> float:
         """
         Calculate penalty multiplier based on how late a quest is completed.
         

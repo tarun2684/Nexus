@@ -1,7 +1,6 @@
 """Level system and XP curve calculations for Nexus."""
 
 from dataclasses import dataclass
-from typing import Optional
 
 
 @dataclass

@@ -1,16 +1,14 @@
 """User profile and state endpoints."""
 from datetime import date
-from typing import List
-from uuid import UUID, uuid4
+from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from app.db import get_session
-from app.models import Profile, User, DailyLog, Event
 from app.engine.time import TimeManager
+from app.models import DailyLog, Profile, User
 
 router = APIRouter(tags=["me"])
 
@@ -33,13 +31,13 @@ class StateOut(BaseModel):
     last_active: date | None
     rank: int | None = None  # Global rank (Sprint 6)
     today_xp: int = 0
-    quests_done_today: List[str] = []
-    combos_fired_today: List[str] = []
+    quests_done_today: list[str] = []
+    combos_fired_today: list[str] = []
 
 
 @router.get("/me/state", response_model=StateOut)
 async def get_user_state(
-    session: AsyncSession = Depends(get_session),
+    session: AsyncSession,
 ) -> StateOut:
     """Get current user state — profile + today's progress.
     

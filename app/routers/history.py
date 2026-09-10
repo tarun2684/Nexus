@@ -1,6 +1,5 @@
 """User history endpoint."""
 from datetime import datetime, timedelta
-from typing import List, Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query
@@ -9,8 +8,8 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.db import get_session
-from app.models import Event, DailyLog
 from app.engine.time import TimeManager
+from app.models import DailyLog, Event
 
 router = APIRouter(tags=["me"])
 
@@ -29,14 +28,14 @@ class HistoryEntry(BaseModel):
 class HistoryOut(BaseModel):
     """History response."""
     user_id: UUID
-    days: List[HistoryEntry]
+    days: list[HistoryEntry]
     total_xp_in_period: int
 
 
 @router.get("/me/history", response_model=HistoryOut)
 async def get_user_history(
     days: int = Query(default=30, ge=1, le=90),
-    session: AsyncSession = Depends(get_session),
+    session: AsyncSession,
 ) -> HistoryOut:
     """Get user's XP history for the last N days.
     
@@ -60,7 +59,7 @@ async def get_user_history(
     daily_logs = list(daily_log_result)
     
     # Build history entries
-    history_entries: List[HistoryEntry] = []
+    history_entries: list[HistoryEntry] = []
     total_xp = 0
     
     for log in daily_logs:

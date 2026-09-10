@@ -1,8 +1,7 @@
 """Combo system for consecutive quest completions."""
 
-from datetime import datetime, timedelta
 from dataclasses import dataclass
-from typing import Optional, List
+from datetime import datetime, timedelta
 from enum import Enum
 
 
@@ -20,7 +19,7 @@ class ComboInfo:
     current_count: int
     max_count: int
     multiplier: float
-    expires_at: Optional[datetime]
+    expires_at: datetime | None
     is_active: bool
 
 
@@ -49,7 +48,7 @@ RAPID_COMBO_WINDOW_MINUTES = 30
 class ComboManager:
     """Manages combo tracking and rewards."""
     
-    def __init__(self, current_time: Optional[datetime] = None):
+    def __init__(self, current_time: datetime | None = None):
         """
         Initialize ComboManager.
         
@@ -65,8 +64,8 @@ class ComboManager:
     
     def calculate_rapid_combo(
         self,
-        completion_times: List[datetime],
-        reference_time: Optional[datetime] = None
+        completion_times: list[datetime],
+        reference_time: datetime | None = None
     ) -> ComboInfo:
         """
         Calculate rapid combo from recent quest completions.
@@ -149,7 +148,7 @@ class ComboManager:
     
     def _find_max_combo_in_window(
         self,
-        completion_times: List[datetime],
+        completion_times: list[datetime],
         reference_time: datetime
     ) -> int:
         """Find the maximum combo achieved in any sliding window."""
@@ -167,7 +166,7 @@ class ComboManager:
         
         return max_count
     
-    def get_combo_reward(self, count: int) -> Optional[ComboReward]:
+    def get_combo_reward(self, count: int) -> ComboReward | None:
         """
         Get reward for achieving a combo milestone.
         
@@ -201,9 +200,9 @@ class ComboManager:
     
     def get_time_until_combo_expires(
         self,
-        completion_times: List[datetime],
-        reference_time: Optional[datetime] = None
-    ) -> Optional[timedelta]:
+        completion_times: list[datetime],
+        reference_time: datetime | None = None
+    ) -> timedelta | None:
         """
         Get time remaining until current combo expires.
         
@@ -252,7 +251,7 @@ class ComboManager:
     def can_start_category_combo(
         self,
         category: str,
-        recent_completions: List[tuple[str, datetime]],
+        recent_completions: list[tuple[str, datetime]],
         required_count: int = 3
     ) -> bool:
         """

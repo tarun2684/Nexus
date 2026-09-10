@@ -3,10 +3,10 @@ from collections.abc import Awaitable, Callable
 from fastapi import FastAPI
 
 from app.db import ping_db, ping_redis
-from app.routers.quests import router as quests_router
-from app.routers.me import router as me_router
 from app.routers.completion import router as completion_router
 from app.routers.history import router as history_router
+from app.routers.me import router as me_router
+from app.routers.quests import router as quests_router
 
 app = FastAPI(title="Nexus")
 app.include_router(quests_router)

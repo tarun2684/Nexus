@@ -1,24 +1,22 @@
 """Comprehensive tests for the game engine components."""
 
-import pytest
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from zoneinfo import ZoneInfo
 
-IST = ZoneInfo("Asia/Kolkata")
-
+from app.engine.achievements import ACHIEVEMENTS, AchievementManager
+from app.engine.combos import RAPID_COMBO_WINDOW_MINUTES, ComboManager
 from app.engine.levels import (
-    calculate_xp_for_level,
-    get_level_info,
-    get_current_level,
-    can_level_up,
     BASE_XP,
-    XP_GROWTH_FACTOR,
     MAX_LEVEL,
+    calculate_xp_for_level,
+    can_level_up,
+    get_current_level,
+    get_level_info,
 )
-from app.engine.time import TimeManager, DeadlineStatus
-from app.engine.streaks import StreakManager, STREAK_REWARDS
-from app.engine.combos import ComboManager, RAPID_COMBO_WINDOW_MINUTES
-from app.engine.achievements import AchievementManager, ACHIEVEMENTS
+from app.engine.streaks import STREAK_REWARDS, StreakManager
+from app.engine.time import DeadlineStatus, TimeManager
+
+IST = ZoneInfo("Asia/Kolkata")
 
 
 class TestLevelCurve:
@@ -173,7 +171,6 @@ class TestStreaks:
 
     def test_streak_milestone_rewards(self):
         """Test streak milestone detection."""
-        manager = StreakManager()
         
         # Check that milestones exist
         thresholds = [r.streak_threshold for r in STREAK_REWARDS]
@@ -422,7 +419,7 @@ class TestEdgeCases:
     def test_ist_timezone_handling(self):
         """Test IST timezone is available."""
         ist = ZoneInfo("Asia/Kolkata")
-        utc = timezone.utc
+        utc = UTC
         
         # Create times in both zones
         ist_time = datetime(2024, 1, 1, 12, 0, tzinfo=ist)
