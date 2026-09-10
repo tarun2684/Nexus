@@ -4,6 +4,8 @@ import pytest
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
+IST = ZoneInfo("Asia/Kolkata")
+
 from app.engine.levels import (
     calculate_xp_for_level,
     get_level_info,
@@ -76,7 +78,7 @@ class TestTimeManagement:
     def test_penalty_multiplier_on_time(self):
         """On-time completion should have no penalty."""
         manager = TimeManager()
-        deadline = datetime.utcnow() + timedelta(hours=1)
+        deadline = datetime.now(IST) + timedelta(hours=1)
         multiplier = manager.calculate_penalty_multiplier(deadline)
         assert multiplier == 1.0
 
