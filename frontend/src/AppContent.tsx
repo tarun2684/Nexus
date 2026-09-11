@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { fetchQuests, fetchUserState, completeQuest, type Quest } from './api'
+import { fetchQuests, fetchUserState, completeQuest } from './api'
 import HUD from './components/HUD'
 import CharacterPanel from './components/CharacterPanel'
 import QuestBoard from './components/QuestBoard'
+import Combos from './components/Combos'
 import Toast from './components/Toast'
 
 function AppContent() {
@@ -56,6 +57,10 @@ function AppContent() {
             onComplete={(questId) => completeMutation.mutate(questId)}
             completedToday={userState?.quests_done_today || []}
           />
+        </section>
+
+        <section style={{ marginTop: '2rem' }}>
+          <Combos combosFiredToday={userState?.combos_fired_today || []} />
         </section>
       </main>
 
