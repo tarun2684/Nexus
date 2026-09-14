@@ -7,12 +7,22 @@ from app.routers.completion import router as completion_router
 from app.routers.history import router as history_router
 from app.routers.me import router as me_router
 from app.routers.quests import router as quests_router
+from app.routers.auth import router as auth_router
+from app.auth import init_fastapi_users
 
 app = FastAPI(title="Nexus")
+
+# Initialize authentication on startup
+@app.on_event("startup")
+async def startup_event():
+    """Initialize fastapi-users on application startup."""
+    init_fastapi_users()
+
 app.include_router(quests_router)
 app.include_router(me_router)
 app.include_router(completion_router)
 app.include_router(history_router)
+app.include_router(auth_router, prefix="/auth", tags=["auth"])
 
 
 async def _check(check_fn: Callable[[], Awaitable[None]]) -> str:
