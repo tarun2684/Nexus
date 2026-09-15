@@ -39,19 +39,16 @@ def test_engine() -> Iterator[AsyncEngine]:
 @pytest.fixture
 async def client(test_engine: AsyncEngine) -> AsyncGenerator[AsyncClient, None]:
     """HTTP client bound to test DB session."""
-    
+
     async def override_get_session() -> AsyncGenerator[AsyncSession, None]:
         async with AsyncSession(test_engine) as session:
             yield session
-    
+
     # Override dependency
     nexus_app.dependency_overrides[get_session] = override_get_session
-    
-    async with AsyncClient(
-        transport=ASGITransport(app=nexus_app),
-        base_url="http://test"
-    ) as ac:
+
+    async with AsyncClient(transport=ASGITransport(app=nexus_app), base_url="http://test") as ac:
         yield ac
-    
+
     # Clean up overrides
     nexus_app.dependency_overrides.clear()

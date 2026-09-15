@@ -1,4 +1,5 @@
 """Tests for Sprint 3 API endpoints."""
+
 import pytest
 from httpx import AsyncClient
 

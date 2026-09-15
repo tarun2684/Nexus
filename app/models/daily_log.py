@@ -24,6 +24,4 @@ class DailyLog(SQLModel, table=True):
     quests_done: list[str] = Field(
         default_factory=list, sa_column=Column(JSON_VARIANT, nullable=False)
     )
-    combos: list[str] = Field(
-        default_factory=list, sa_column=Column(JSON_VARIANT, nullable=False)
-    )
+    combos: list[str] = Field(default_factory=list, sa_column=Column(JSON_VARIANT, nullable=False))

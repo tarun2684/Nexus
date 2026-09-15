@@ -62,10 +62,10 @@ class TestLevelCurve:
         """Test level up detection."""
         # Get XP needed for level 2
         level2_xp = calculate_xp_for_level(2)
-        
+
         # Just below level 2
         assert not can_level_up(level2_xp - 100, 50)
-        
+
         # Enough to reach level 2
         assert can_level_up(level2_xp - 100, 150)
 
@@ -84,7 +84,7 @@ class TestTimeManagement:
         """Late completion should have increasing penalties."""
         base_time = datetime.utcnow()
         deadline = base_time
-        
+
         # Within 24 hours late
         completion = deadline + timedelta(hours=12)
         multiplier = TimeManager(base_time).calculate_penalty_multiplier(deadline, completion)
@@ -103,7 +103,7 @@ class TestTimeManagement:
     def test_deadline_status(self):
         """Test deadline status detection."""
         base_time = datetime.utcnow()
-        
+
         # Future deadline
         future = base_time + timedelta(hours=48)
         status = TimeManager(base_time).get_deadline_status(future)
@@ -127,10 +127,10 @@ class TestStreaks:
         """Consecutive daily completions should build streak."""
         manager = StreakManager()
         today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
-        
+
         # Create consecutive dates
         dates = [today - timedelta(days=i) for i in range(5)]
-        
+
         info = manager.calculate_streak(dates, today)
         assert info.current_streak == 5
         assert info.is_active
@@ -139,14 +139,14 @@ class TestStreaks:
         """Missing a day should reset streak."""
         manager = StreakManager()
         today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
-        
+
         # Gap of 2 days - skip yesterday
         dates = [
             today,
             today - timedelta(days=2),  # Skip yesterday
             today - timedelta(days=3),
         ]
-        
+
         info = manager.calculate_streak(dates, today)
         assert info.current_streak == 1  # Only today counts
         # Note: days_missed is only set when streak is broken (current_streak=0)
@@ -157,7 +157,7 @@ class TestStreaks:
         """Completing twice in one day shouldn't increase streak."""
         manager = StreakManager()
         today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
-        
+
         # Multiple completions on same day
         dates = [
             today,
@@ -165,13 +165,13 @@ class TestStreaks:
             today - timedelta(days=1),
             today - timedelta(days=2),
         ]
-        
+
         info = manager.calculate_streak(dates, today)
         assert info.current_streak == 3  # Not 4 or 5
 
     def test_streak_milestone_rewards(self):
         """Test streak milestone detection."""
-        
+
         # Check that milestones exist
         thresholds = [r.streak_threshold for r in STREAK_REWARDS]
         assert 3 in thresholds
@@ -182,13 +182,13 @@ class TestStreaks:
         """Test when daily quests are due."""
         manager = StreakManager()
         today = datetime.utcnow()
-        
+
         # No previous completion - quest is due
         assert manager.is_daily_quest_due(None, today)
-        
+
         # Completed today - not due
         assert not manager.is_daily_quest_due(today, today)
-        
+
         # Completed yesterday - due
         assert manager.is_daily_quest_due(today - timedelta(days=1), today)
 
@@ -200,10 +200,10 @@ class TestCombos:
         """Multiple completions within time window should trigger combo."""
         manager = ComboManager()
         now = datetime.utcnow()
-        
+
         # Completions every 5 minutes
-        completions = [now - timedelta(minutes=i*5) for i in range(4)]
-        
+        completions = [now - timedelta(minutes=i * 5) for i in range(4)]
+
         info = manager.calculate_rapid_combo(completions, now)
         assert info.current_count == 4
         assert info.is_active
@@ -213,13 +213,12 @@ class TestCombos:
         """Completions outside window shouldn't count."""
         manager = ComboManager()
         now = datetime.utcnow()
-        
+
         # Old completions outside window (all beyond the window)
         old_completions = [
-            now - timedelta(minutes=RAPID_COMBO_WINDOW_MINUTES + 5 + i)
-            for i in range(5)
+            now - timedelta(minutes=RAPID_COMBO_WINDOW_MINUTES + 5 + i) for i in range(5)
         ]
-        
+
         info = manager.calculate_rapid_combo(old_completions, now)
         # Most recent completion might still be counted if within window edge
         # The key is that combo should not be active (multiplier = 1.0)
@@ -229,11 +228,11 @@ class TestCombos:
     def test_combo_multiplier_increases(self):
         """Higher combo counts should give better multipliers."""
         manager = ComboManager()
-        
+
         mult_2 = manager._get_rapid_multiplier(2)
         mult_5 = manager._get_rapid_multiplier(5)
         mult_10 = manager._get_rapid_multiplier(10)
-        
+
         assert mult_5 > mult_2
         assert mult_10 > mult_5
 
@@ -242,7 +241,7 @@ class TestCombos:
         manager = ComboManager()
         base_xp = 100
         multiplier = 1.5
-        
+
         bonus_xp = manager.calculate_combo_bonus(base_xp, multiplier)
         assert bonus_xp == 150
 
@@ -253,7 +252,7 @@ class TestAchievements:
     def test_achievement_definitions_exist(self):
         """Verify achievements are defined."""
         assert len(ACHIEVEMENTS) > 0
-        
+
         # Check specific types exist
         ids = [a.id for a in ACHIEVEMENTS]
         assert "level_5" in ids
@@ -264,9 +263,9 @@ class TestAchievements:
         """Test achievement progress tracking."""
         manager = AchievementManager()
         achievement = manager.get_achievement("level_10")
-        
+
         assert achievement is not None
-        
+
         # Not yet earned
         user_stats = {"level": 5}
         result = manager.check_achievement(achievement, user_stats)
@@ -282,10 +281,10 @@ class TestAchievements:
     def test_newly_earned_detection(self):
         """Test detection of newly earned achievements."""
         manager = AchievementManager()
-        
+
         # Previously earned nothing
         previously_earned = []
-        
+
         # User stats that earn multiple achievements
         user_stats = {
             "level": 10,
@@ -293,9 +292,9 @@ class TestAchievements:
             "streak_days": 8,
             "combo_count": 6,
         }
-        
+
         newly_earned = manager.get_newly_earned_achievements(user_stats, previously_earned)
-        
+
         # Should earn several achievements
         assert len(newly_earned) > 0
         ids = [a.id for a in newly_earned]
@@ -304,10 +303,10 @@ class TestAchievements:
     def test_achievement_rewards_calculation(self):
         """Test total reward calculation."""
         manager = AchievementManager()
-        
+
         earned_ids = ["level_5", "quests_10"]
         total_xp, total_coins = manager.calculate_total_rewards(earned_ids)
-        
+
         assert total_xp > 0
         assert total_coins > 0
 
@@ -318,10 +317,10 @@ class TestIntegration:
     def test_full_completion_flow(self):
         """Simulate a full quest completion with all mechanics."""
         from app.services.game import GameService
-        
+
         service = GameService()
         now = datetime.utcnow()
-        
+
         # User state
         user_state = {
             "total_xp": 500,
@@ -329,11 +328,11 @@ class TestIntegration:
             "level": 3,
             "quests_completed": 5,
         }
-        
+
         # Recent activity
-        recent_completions = [now - timedelta(minutes=i*10) for i in range(3)]
+        recent_completions = [now - timedelta(minutes=i * 10) for i in range(3)]
         daily_dates = [now - timedelta(days=i) for i in range(5)]
-        
+
         # Complete a quest
         result = service.complete_quest(
             user_id=1,
@@ -345,9 +344,9 @@ class TestIntegration:
             current_user_state=user_state,
             recent_completions=recent_completions,
             daily_completion_dates=daily_dates,
-            earned_achievements=[]
+            earned_achievements=[],
         )
-        
+
         assert result.success
         assert result.xp_earned > 0
         assert result.coins_earned > 0
@@ -356,19 +355,19 @@ class TestIntegration:
     def test_penalty_doesnt_affect_streak(self):
         """Penalties should not break streaks."""
         from app.services.game import GameService
-        
+
         service = GameService()
         now = datetime.utcnow()
-        
+
         user_state = {
             "total_xp": 1000,
             "coins": 200,
             "level": 5,
             "missed_deadlines": 0,
         }
-        
+
         deadline = now - timedelta(hours=2)
-        
+
         result = service.apply_penalty(
             user_id=1,
             quest_id=1,
@@ -376,9 +375,9 @@ class TestIntegration:
             quest_coins=50,
             deadline=deadline,
             current_time=now,
-            current_user_state=user_state
+            current_user_state=user_state,
         )
-        
+
         assert result.success
         assert result.xp_lost > 0
         # Note: apply_penalty doesn't touch streak data - that's handled separately
@@ -420,10 +419,10 @@ class TestEdgeCases:
         """Test IST timezone is available."""
         ist = ZoneInfo("Asia/Kolkata")
         utc = UTC
-        
+
         # Create times in both zones
         ist_time = datetime(2024, 1, 1, 12, 0, tzinfo=ist)
         utc_time = datetime(2024, 1, 1, 12, 0, tzinfo=utc)
-        
+
         # They should be different
         assert ist_time != utc_time

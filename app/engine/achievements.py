@@ -8,6 +8,7 @@ from typing import Any
 
 class AchievementType(Enum):
     """Types of achievements available."""
+
     PROGRESS = "progress"  # Reach a milestone (level, XP, etc.)
     COLLECTION = "collection"  # Collect items or complete sets
     SKILL = "skill"  # Demonstrate skill (perfect streaks, combos)
@@ -17,6 +18,7 @@ class AchievementType(Enum):
 
 class AchievementTier(Enum):
     """Tiers of achievement difficulty."""
+
     BRONZE = "bronze"
     SILVER = "silver"
     GOLD = "gold"
@@ -27,6 +29,7 @@ class AchievementTier(Enum):
 @dataclass
 class Achievement:
     """Definition of an achievement."""
+
     id: str
     name: str
     description: str
@@ -42,6 +45,7 @@ class Achievement:
 @dataclass
 class UserAchievement:
     """User's progress toward an achievement."""
+
     achievement_id: str
     earned_at: datetime | None
     current_progress: float
@@ -61,7 +65,7 @@ ACHIEVEMENTS = [
         tier=AchievementTier.BRONZE,
         requirement={"level": 5},
         reward_xp=100,
-        reward_coins=50
+        reward_coins=50,
     ),
     Achievement(
         id="level_10",
@@ -71,7 +75,7 @@ ACHIEVEMENTS = [
         tier=AchievementTier.SILVER,
         requirement={"level": 10},
         reward_xp=250,
-        reward_coins=100
+        reward_coins=100,
     ),
     Achievement(
         id="level_25",
@@ -81,7 +85,7 @@ ACHIEVEMENTS = [
         tier=AchievementTier.GOLD,
         requirement={"level": 25},
         reward_xp=500,
-        reward_coins=200
+        reward_coins=200,
     ),
     Achievement(
         id="level_50",
@@ -91,7 +95,7 @@ ACHIEVEMENTS = [
         tier=AchievementTier.PLATINUM,
         requirement={"level": 50},
         reward_xp=1000,
-        reward_coins=500
+        reward_coins=500,
     ),
     Achievement(
         id="level_100",
@@ -101,9 +105,8 @@ ACHIEVEMENTS = [
         tier=AchievementTier.DIAMOND,
         requirement={"level": 100},
         reward_xp=5000,
-        reward_coins=2000
+        reward_coins=2000,
     ),
-    
     # Quest completion achievements
     Achievement(
         id="quests_10",
@@ -113,7 +116,7 @@ ACHIEVEMENTS = [
         tier=AchievementTier.BRONZE,
         requirement={"quests_completed": 10},
         reward_xp=150,
-        reward_coins=75
+        reward_coins=75,
     ),
     Achievement(
         id="quests_50",
@@ -123,7 +126,7 @@ ACHIEVEMENTS = [
         tier=AchievementTier.SILVER,
         requirement={"quests_completed": 50},
         reward_xp=400,
-        reward_coins=150
+        reward_coins=150,
     ),
     Achievement(
         id="quests_100",
@@ -133,7 +136,7 @@ ACHIEVEMENTS = [
         tier=AchievementTier.GOLD,
         requirement={"quests_completed": 100},
         reward_xp=800,
-        reward_coins=300
+        reward_coins=300,
     ),
     Achievement(
         id="quests_500",
@@ -143,9 +146,8 @@ ACHIEVEMENTS = [
         tier=AchievementTier.PLATINUM,
         requirement={"quests_completed": 500},
         reward_xp=2000,
-        reward_coins=750
+        reward_coins=750,
     ),
-    
     # Streak achievements
     Achievement(
         id="streak_7",
@@ -155,7 +157,7 @@ ACHIEVEMENTS = [
         tier=AchievementTier.SILVER,
         requirement={"streak_days": 7},
         reward_xp=300,
-        reward_coins=100
+        reward_coins=100,
     ),
     Achievement(
         id="streak_30",
@@ -165,7 +167,7 @@ ACHIEVEMENTS = [
         tier=AchievementTier.GOLD,
         requirement={"streak_days": 30},
         reward_xp=750,
-        reward_coins=250
+        reward_coins=250,
     ),
     Achievement(
         id="streak_90",
@@ -175,7 +177,7 @@ ACHIEVEMENTS = [
         tier=AchievementTier.PLATINUM,
         requirement={"streak_days": 90},
         reward_xp=1500,
-        reward_coins=500
+        reward_coins=500,
     ),
     Achievement(
         id="streak_365",
@@ -185,9 +187,8 @@ ACHIEVEMENTS = [
         tier=AchievementTier.DIAMOND,
         requirement={"streak_days": 365},
         reward_xp=5000,
-        reward_coins=2000
+        reward_coins=2000,
     ),
-    
     # Combo achievements
     Achievement(
         id="combo_5",
@@ -197,7 +198,7 @@ ACHIEVEMENTS = [
         tier=AchievementTier.BRONZE,
         requirement={"combo_count": 5},
         reward_xp=200,
-        reward_coins=75
+        reward_coins=75,
     ),
     Achievement(
         id="combo_10",
@@ -207,9 +208,8 @@ ACHIEVEMENTS = [
         tier=AchievementTier.GOLD,
         requirement={"combo_count": 10},
         reward_xp=600,
-        reward_coins=200
+        reward_coins=200,
     ),
-    
     # Perfect week achievement
     Achievement(
         id="perfect_week",
@@ -219,175 +219,149 @@ ACHIEVEMENTS = [
         tier=AchievementTier.GOLD,
         requirement={"perfect_days": 7},
         reward_xp=500,
-        reward_coins=200
+        reward_coins=200,
     ),
 ]
 
 
 class AchievementManager:
     """Manages achievement tracking and unlocking."""
-    
+
     def __init__(self):
         """Initialize AchievementManager with predefined achievements."""
-        self.achievements: dict[str, Achievement] = {
-            ach.id: ach for ach in ACHIEVEMENTS
-        }
-    
+        self.achievements: dict[str, Achievement] = {ach.id: ach for ach in ACHIEVEMENTS}
+
     def get_achievement(self, achievement_id: str) -> Achievement | None:
         """Get an achievement by ID."""
         return self.achievements.get(achievement_id)
-    
+
     def check_achievement(
-        self,
-        achievement: Achievement,
-        user_stats: dict[str, Any]
+        self, achievement: Achievement, user_stats: dict[str, Any]
     ) -> UserAchievement:
         """
         Check user's progress toward an achievement.
-        
+
         Args:
             achievement: The achievement to check
             user_stats: Dictionary of user statistics
-            
+
         Returns:
             UserAchievement with current progress
         """
         required_key = next(iter(achievement.requirement.keys()))
         required_value = achievement.requirement[required_key]
-        
+
         current_value = user_stats.get(required_key, 0)
-        
+
         # Calculate progress percentage
         if required_value > 0:
             percent_complete = min((current_value / required_value) * 100, 100)
         else:
             percent_complete = 100 if current_value >= 0 else 0
-        
+
         is_earned = current_value >= required_value
-        
+
         return UserAchievement(
             achievement_id=achievement.id,
             earned_at=datetime.utcnow() if is_earned else None,
             current_progress=current_value,
             required_progress=required_value,
             percent_complete=percent_complete,
-            is_earned=is_earned
+            is_earned=is_earned,
         )
-    
+
     def check_all_achievements(
-        self,
-        user_stats: dict[str, Any],
-        earned_achievements: list[str]
+        self, user_stats: dict[str, Any], earned_achievements: list[str]
     ) -> list[UserAchievement]:
         """
         Check progress on all achievements.
-        
+
         Args:
             user_stats: Dictionary of user statistics
             earned_achievements: List of already earned achievement IDs
-            
+
         Returns:
             List of UserAchievement objects
         """
         results = []
         for achievement in ACHIEVEMENTS:
             user_ach = self.check_achievement(achievement, user_stats)
-            
+
             # If already earned, set the earned_at date properly
             if achievement.id in earned_achievements:
                 user_ach.is_earned = True
                 user_ach.percent_complete = 100
-            
+
             results.append(user_ach)
-        
+
         return results
-    
+
     def get_newly_earned_achievements(
-        self,
-        user_stats: dict[str, Any],
-        previously_earned: list[str]
+        self, user_stats: dict[str, Any], previously_earned: list[str]
     ) -> list[Achievement]:
         """
         Find achievements that were just earned.
-        
+
         Args:
             user_stats: Current user statistics
             previously_earned: List of previously earned achievement IDs
-            
+
         Returns:
             List of newly earned Achievement objects
         """
         newly_earned = []
-        
+
         for achievement in ACHIEVEMENTS:
             if achievement.id in previously_earned:
                 continue
-            
+
             user_ach = self.check_achievement(achievement, user_stats)
             if user_ach.is_earned:
                 newly_earned.append(achievement)
-        
+
         return newly_earned
-    
-    def get_achievements_by_type(
-        self,
-        achievement_type: AchievementType
-    ) -> list[Achievement]:
+
+    def get_achievements_by_type(self, achievement_type: AchievementType) -> list[Achievement]:
         """Get all achievements of a specific type."""
-        return [
-            ach for ach in ACHIEVEMENTS
-            if ach.achievement_type == achievement_type
-        ]
-    
-    def get_achievements_by_tier(
-        self,
-        tier: AchievementTier
-    ) -> list[Achievement]:
+        return [ach for ach in ACHIEVEMENTS if ach.achievement_type == achievement_type]
+
+    def get_achievements_by_tier(self, tier: AchievementTier) -> list[Achievement]:
         """Get all achievements of a specific tier."""
-        return [
-            ach for ach in ACHIEVEMENTS
-            if ach.tier == tier
-        ]
-    
-    def calculate_total_rewards(
-        self,
-        earned_achievement_ids: list[str]
-    ) -> tuple[int, int]:
+        return [ach for ach in ACHIEVEMENTS if ach.tier == tier]
+
+    def calculate_total_rewards(self, earned_achievement_ids: list[str]) -> tuple[int, int]:
         """
         Calculate total rewards from earned achievements.
-        
+
         Args:
             earned_achievement_ids: List of earned achievement IDs
-            
+
         Returns:
             Tuple of (total_xp, total_coins)
         """
         total_xp = 0
         total_coins = 0
-        
+
         for ach_id in earned_achievement_ids:
             achievement = self.get_achievement(ach_id)
             if achievement:
                 total_xp += achievement.reward_xp
                 total_coins += achievement.reward_coins
-        
+
         return total_xp, total_coins
-    
-    def get_completion_percentage(
-        self,
-        earned_achievement_ids: list[str]
-    ) -> float:
+
+    def get_completion_percentage(self, earned_achievement_ids: list[str]) -> float:
         """
         Calculate overall achievement completion percentage.
-        
+
         Args:
             earned_achievement_ids: List of earned achievement IDs
-            
+
         Returns:
             Percentage of achievements earned (0-100)
         """
         if not ACHIEVEMENTS:
             return 0
-        
+
         earned_count = len(earned_achievement_ids)
         return (earned_count / len(ACHIEVEMENTS)) * 100
